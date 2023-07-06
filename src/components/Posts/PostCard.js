@@ -144,9 +144,9 @@ const PostCard = ({ post }) => {
             <p>{post?.likedByUsers?.length}</p>
           )}
 
-          {post?.comments.length > 0 && (
+          {post?.comments?.length > 0 && (
             <p className="opacity-50 cursor-pointer">
-              View All {post?.comments.length} comments
+              View All {post?.comments?.length} comments
             </p>
           )}
         </div>
