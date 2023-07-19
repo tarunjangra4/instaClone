@@ -14,13 +14,14 @@ import CommentModal from "../Comment/CommentModal";
 import { useDisclosure } from "@chakra-ui/react";
 import { useDispatch, useSelector } from "react-redux";
 import {
+  deletePostAction,
   likePostAction,
   savePostAction,
   unlikePostAction,
   unsavePostAction,
 } from "../../redux/Post/Action";
 import { findIsPostLikedByUser, findIsPostSaved } from "../../Config/Logic";
-import { Navigate, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 const PostCard = ({ post }) => {
   const [showDropdown, setShowDropDown] = useState(false);
@@ -31,8 +32,9 @@ const PostCard = ({ post }) => {
   const token = localStorage.getItem("token");
   const { user } = useSelector((store) => store);
   const navigate = useNavigate();
+  const data = { token, postId: post?.postId };
 
-  const data = { token, postId: post?.id };
+  console.log("post ", post);
 
   const handleSavePost = () => {
     setIsSaved(true);
@@ -59,14 +61,21 @@ const PostCard = ({ post }) => {
   };
 
   const handleOpenCommentModal = () => {
-    navigate(`/comment/${post.id}`);
+    navigate(`/comment/${post?.postId}`);
     onOpen();
   };
 
   useEffect(() => {
-    setIsPostLiked(findIsPostLikedByUser(post, user.reqUser.id));
-    setIsSaved(findIsPostSaved(user.reqUser, post.id));
-  }, [post.likedByUsers, user.reqUser]);
+    setIsPostLiked(
+      post?.likeBy?.some((likedBy) => user?.currUser?.id === likedBy?.id)
+    );
+    // setIsPostLiked(findIsPostLikedByUser(post, user?.currUser?.id));
+    // setIsSaved(findIsPostSaved(user?.currUser, post?.id));
+  }, [post.likeBy, user.currUser]);
+
+  const handleDeletePost = () => {
+    dispatch(deletePostAction(data));
+  };
 
   return (
     <div>
@@ -78,14 +87,14 @@ const PostCard = ({ post }) => {
                 alt=""
                 className="h-12 w-12 rounded-full"
                 src={
-                  post?.user?.userImage ||
+                  post?.createdBy?.userImage ||
                   "https://cdn.pixabay.com/photo/2017/11/10/05/48/user-2935527_1280.png"
                 }
               />
             </div>
             <div className="ml-3">
               <p className="flex items-center font-semibold text-sm">
-                {post?.user?.username}
+                {post?.createdBy?.username}
                 <BsDot className="font-thin text-[#adadad]" />
                 <span className="font-thin text-sm ml-2">Time</span>
               </p>
@@ -96,15 +105,26 @@ const PostCard = ({ post }) => {
             <BsThreeDots className="dots" onClick={handleClick} />
             <div className="dropdown-content">
               {showDropdown && (
-                <p className="bg-black text-white py-1 px-4 rounded-md cursor-pointer">
+                <p
+                  className="bg-black text-white py-1 px-4 rounded-md cursor-pointer"
+                  onClick={handleDeletePost}
+                >
                   Delete
                 </p>
               )}
             </div>
           </div>
         </div>
-        <div className="w-full">
-          <img alt="" className="w-full" src={post?.image} />
+        <div
+          className="w-full flex items-center"
+          style={{ minHeight: "400px" }}
+        >
+          <img
+            alt=""
+            className="w-full"
+            style={{ maxHeight: "550px" }}
+            src={post?.image}
+          />
         </div>
         <div className="flex justify-between items-center w-full px-4 py-2">
           <div className="flex items-center space-x-2">
@@ -140,9 +160,7 @@ const PostCard = ({ post }) => {
           </div>
         </div>
         <div className="w-full pb-2 px-4 text-left">
-          {post?.likedByUsers?.length > 0 && (
-            <p>{post?.likedByUsers?.length}</p>
-          )}
+          {post?.likeBy?.length > 0 && <p>{post?.likedByUsers?.length}</p>}
 
           {post?.comments?.length > 0 && (
             <p className="opacity-50 cursor-pointer">
@@ -167,6 +185,7 @@ const PostCard = ({ post }) => {
         isSaved={isSaved}
         isPostLiked={isPostLiked}
         handlePostLike={handlePostLike}
+        handlePostUnlike={handlePostUnlike}
         handleSavePost={handleSavePost}
         handleUnsavePost={handleUnsavePost}
       />
