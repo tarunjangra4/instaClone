@@ -10,7 +10,8 @@ import { getUserProfileAction } from "../../redux/User/Action";
 const Home = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [userIds, setUserIds] = useState([]);
-  const { user, post } = useSelector((store) => store);
+  // const [followingUsersIds, setFollowingUsersIds] = useState([]);
+  const { user, post, comment } = useSelector((store) => store);
   const dispatch = useDispatch();
   const token = localStorage.getItem("token");
 
@@ -21,17 +22,21 @@ const Home = () => {
   }, [token]);
 
   useEffect(() => {
-    const newIds = user.reqUser?.following?.map((user) => user.id) || [];
-    setUserIds([user.reqUser?.id, ...newIds]);
-  }, [user.reqUser]);
+    // const newIds = user.currUser?.following?.map((user) => user.id) || [];
+    // setUserIds([user.currUser?.id, ...newIds]);
+    setUserIds([user.currUser?.id]);
+  }, [user.currUser]); // when current user change then userIds will change
+
+  console.log("comment delete ", comment);
 
   useEffect(() => {
     const data = {
       token,
-      userIds: userIds.join(","),
+      userIds: userIds?.join(","),
     };
-    dispatch(findAllUsersPostAction(data));
+    data?.userIds?.length && dispatch(findAllUsersPostAction(data));
   }, [userIds, post.createdPost, post.deletedPost]);
+
   return (
     <div>
       <div className="flex mt-10">

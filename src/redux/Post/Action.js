@@ -9,6 +9,7 @@ import {
   UNLIKE_POST,
   UNSAVE_POST,
 } from "./ActionType";
+import axios from "axios";
 
 const BASE_API = "http://localhost:5455/api";
 
@@ -32,6 +33,7 @@ export const createPostAction = (data) => async (dispatch) => {
 };
 
 export const findAllUsersPostAction = (data) => async (dispatch) => {
+  console.log("function called");
   try {
     const res = await fetch(`${BASE_API}/posts/following/${data?.userIds}`, {
       method: "GET",
@@ -51,7 +53,7 @@ export const findAllUsersPostAction = (data) => async (dispatch) => {
   }
 };
 
-// export const reqUserPostAction = (data) => async (dispatch) => {
+// export const currUserPostAction = (data) => async (dispatch) => {
 //   try {
 //     const res = await fetch(`${BASE_API}/posts/following/${data.userId}`, {
 //       method: "GET",
@@ -161,13 +163,17 @@ export const unsavePostAction = (data) => async (dispatch) => {
 
 export const deletePostAction = (data) => async (dispatch) => {
   try {
-    const res = await fetch(`${BASE_API}/posts/delete/${data.postId}`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: "Bearer " + data.token,
-      },
-    });
+    const res = await axios
+      .put(
+        `${BASE_API}/posts/delete/${data.postId}`,
+        {},
+        {
+          headers: {
+            Authorization: "Bearer " + data.token,
+          },
+        }
+      )
+      .then((response) => response.json());
 
     const post = await res.json();
     console.log("deleted post ", post);

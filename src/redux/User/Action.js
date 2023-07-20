@@ -20,9 +20,9 @@ export const getUserProfileAction = (jwt) => async (dispatch) => {
       },
     });
 
-    const reqUser = await res.json();
-    // console.log("user response ", reqUser);
-    dispatch({ type: REQ_USER, payload: reqUser });
+    const currUser = await res.json();
+    // console.log("user response ", currUser);
+    dispatch({ type: REQ_USER, payload: currUser });
   } catch (error) {
     console.log(error);
   }
