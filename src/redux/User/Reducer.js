@@ -6,6 +6,7 @@ const initialValue = {
   unfollowUser: null,
   searchUser: null,
   updatedUser: null,
+  suggestedUsers: [],
 };
 
 export const UserReducer = (store = initialValue, { type, payload }) => {
@@ -23,6 +24,8 @@ export const UserReducer = (store = initialValue, { type, payload }) => {
     return { ...store, searchUser: payload };
   } else if (type === "UPDATE_USER") {
     return { ...store, updatedUser: payload };
+  } else if (type === "SUGGESTED_USER") {
+    return { ...store, suggestedUsers: payload };
   }
 
   return store;

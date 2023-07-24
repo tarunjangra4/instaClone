@@ -10,7 +10,6 @@ import axios, { isCancel, AxiosError } from "axios";
 const BASE_API = "http://localhost:5455/api";
 
 export const createCommentAction = (data) => async (dispatch) => {
-  console.log("post data", data);
   try {
     const res = await fetch(`${BASE_API}/comments/create/${data.postId}`, {
       method: "POST",
@@ -22,7 +21,6 @@ export const createCommentAction = (data) => async (dispatch) => {
     });
 
     const comment = await res.json();
-    console.log("created comment ", comment);
     dispatch({ type: CREATE_COMMENT, payload: comment });
   } catch (error) {
     console.log(error);
@@ -40,7 +38,6 @@ export const findPostCommentAction = (data) => async (dispatch) => {
     });
 
     const comment = await res.json();
-    console.log("find post comment ", comment);
     dispatch({ type: GET_POST_COMMENT, payload: comment });
   } catch (error) {
     console.log(error);
@@ -59,10 +56,7 @@ export const likeCommentAction = (data) => async (dispatch) => {
           },
         }
       )
-      .then((response) => response.json());
-    console.log("like commnet res ", res);
-    // const comment = await res.json();
-    console.log("liked comment ", res);
+      .then((response) => response);
     dispatch({ type: LIKE_COMMENT, payload: res });
   } catch (error) {
     console.log(error);
@@ -81,7 +75,7 @@ export const unlikeCommentAction = (data) => async (dispatch) => {
           },
         }
       )
-      .then((response) => response.json());
+      .then((response) => response);
 
     dispatch({ type: UNLIKE_COMMENT, payload: res });
   } catch (error) {

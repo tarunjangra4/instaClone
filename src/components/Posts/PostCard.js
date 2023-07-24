@@ -20,7 +20,11 @@ import {
   unlikePostAction,
   unsavePostAction,
 } from "../../redux/Post/Action";
-import { findIsPostLikedByUser, findIsPostSaved } from "../../Config/Logic";
+import {
+  findIsPostLikedByUser,
+  findIsPostSaved,
+  timeDifference,
+} from "../../Config/Logic";
 import { useNavigate } from "react-router-dom";
 
 const PostCard = ({ post }) => {
@@ -33,8 +37,6 @@ const PostCard = ({ post }) => {
   const { user } = useSelector((store) => store);
   const navigate = useNavigate();
   const data = { token, postId: post?.postId };
-
-  console.log("post ", post);
 
   const handleSavePost = () => {
     setIsSaved(true);
@@ -73,6 +75,10 @@ const PostCard = ({ post }) => {
     // setIsSaved(findIsPostSaved(user?.currUser, post?.id));
   }, [post.likeBy, user.currUser]);
 
+  useEffect(() => {
+    setIsSaved(post?.isPostSaved);
+  }, [post.isPostSaved]);
+
   const handleDeletePost = () => {
     dispatch(deletePostAction(data));
   };
@@ -96,7 +102,9 @@ const PostCard = ({ post }) => {
               <p className="flex items-center font-semibold text-sm">
                 {post?.createdBy?.username}
                 <BsDot className="font-thin text-[#adadad]" />
-                <span className="font-thin text-sm ml-2">Time</span>
+                <span className="font-thin text-sm ml-2">
+                  {timeDifference(post?.createdAt)}
+                </span>
               </p>
               <p className="font-thin text-sm text-left">{post?.location}</p>
             </div>
@@ -160,10 +168,18 @@ const PostCard = ({ post }) => {
           </div>
         </div>
         <div className="w-full pb-2 px-4 text-left">
-          {post?.likeBy?.length > 0 && <p>{post?.likedByUsers?.length}</p>}
+          {post?.likeBy?.length > 0 && (
+            <p>
+              {post?.likeBy?.length}{" "}
+              {post?.likeBy?.length == 1 ? "Like" : "Likes"}
+            </p>
+          )}
 
           {post?.comments?.length > 0 && (
-            <p className="opacity-50 cursor-pointer">
+            <p
+              className="opacity-50 cursor-pointer"
+              onClick={handleOpenCommentModal}
+            >
               View All {post?.comments?.length} comments
             </p>
           )}

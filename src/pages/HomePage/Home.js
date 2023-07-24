@@ -27,15 +27,20 @@ const Home = () => {
     setUserIds([user.currUser?.id]);
   }, [user.currUser]); // when current user change then userIds will change
 
-  console.log("comment delete ", comment);
-
   useEffect(() => {
+    console.log("api call");
     const data = {
       token,
       userIds: userIds?.join(","),
     };
     data?.userIds?.length && dispatch(findAllUsersPostAction(data));
-  }, [userIds, post.createdPost, post.deletedPost]);
+  }, [
+    userIds,
+    post.createdPost,
+    post.deletedPost,
+    comment.createdComment,
+    comment.deletedComment,
+  ]);
 
   return (
     <div>

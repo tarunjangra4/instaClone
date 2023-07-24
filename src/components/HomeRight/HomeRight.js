@@ -1,7 +1,16 @@
-import React from "react";
+import React, { useEffect } from "react";
 import SuggestionCrad from "./SuggestionCrad";
+import { useDispatch, useSelector } from "react-redux";
+import { suggestedUsers } from "../../redux/User/Action";
 
 const HomeRight = () => {
+  const { user } = useSelector((store) => store);
+  const token = localStorage.getItem("token");
+  const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(suggestedUsers({ token }));
+  }, [user.unfollowUser, user.followUser]);
+
   return (
     <div className="">
       <div>
@@ -15,17 +24,17 @@ const HomeRight = () => {
               />
             </div>
             <div className="ml-3">
-              <p>full name</p>
-              <p className="opacity-70">username</p>
+              <p>{user?.currUser?.name}</p>
+              <p className="opacity-70">{user?.currUser?.username}</p>
             </div>
           </div>
-          <div>
+          {/* <div>
             <p className="text-blue-700 font-semibold cursor-pointer">switch</p>
-          </div>
+          </div> */}
         </div>
         <div className="w-full space-y-5 mt-10">
-          {[1, 1, 1, 1, 1].map((item, index) => (
-            <SuggestionCrad key={index} />
+          {user?.suggestedUsers.map((item, index) => (
+            <SuggestionCrad key={index} suggestedUser={item} />
           ))}
         </div>
       </div>
