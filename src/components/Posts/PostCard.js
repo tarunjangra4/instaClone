@@ -38,6 +38,16 @@ const PostCard = ({ post }) => {
   const navigate = useNavigate();
   const data = { token, postId: post?.postId };
 
+  useEffect(() => {
+    setIsPostLiked(
+      post?.likeBy?.some((likedBy) => user?.currUser?.id === likedBy?.id)
+    );
+  }, [post.likeBy, user.currUser]);
+
+  useEffect(() => {
+    setIsSaved(post?.isPostSaved);
+  }, [post.isPostSaved]);
+
   const handleSavePost = () => {
     setIsSaved(true);
     dispatch(savePostAction(data));
@@ -67,20 +77,12 @@ const PostCard = ({ post }) => {
     onOpen();
   };
 
-  useEffect(() => {
-    setIsPostLiked(
-      post?.likeBy?.some((likedBy) => user?.currUser?.id === likedBy?.id)
-    );
-    // setIsPostLiked(findIsPostLikedByUser(post, user?.currUser?.id));
-    // setIsSaved(findIsPostSaved(user?.currUser, post?.id));
-  }, [post.likeBy, user.currUser]);
-
-  useEffect(() => {
-    setIsSaved(post?.isPostSaved);
-  }, [post.isPostSaved]);
-
   const handleDeletePost = () => {
     dispatch(deletePostAction(data));
+  };
+
+  const handleProfileNavigate = (username) => {
+    navigate(`/${username}`);
   };
 
   return (
@@ -99,7 +101,10 @@ const PostCard = ({ post }) => {
               />
             </div>
             <div className="ml-3">
-              <p className="flex items-center font-semibold text-sm">
+              <p
+                className="flex items-center font-semibold text-sm cursor-pointer"
+                onClick={() => handleProfileNavigate(post?.createdBy?.username)}
+              >
                 {post?.createdBy?.username}
                 <BsDot className="font-thin text-[#adadad]" />
                 <span className="font-thin text-sm ml-2">

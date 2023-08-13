@@ -1,6 +1,6 @@
 import React from "react";
 
-const SuggestionCrad = ({ suggestedUser }) => {
+const SuggestionCrad = ({ suggestedUser, handleFollow }) => {
   return (
     <div className="flex justify-between items-center">
       <div className="flex items-center">
@@ -16,7 +16,10 @@ const SuggestionCrad = ({ suggestedUser }) => {
           </p>
         </div>
       </div>
-      <p className="text-blue-700 font-semibold text-sm cursor-pointer">
+      <p
+        className="text-blue-700 font-semibold text-sm cursor-pointer"
+        onClick={() => handleFollow(suggestedUser?.userId)}
+      >
         Follow
       </p>
     </div>
