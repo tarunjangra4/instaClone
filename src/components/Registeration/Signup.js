@@ -48,6 +48,8 @@ const Signup = () => {
 
   const handleSubmit = (values, actions) => {
     dispatch(SignupAction(values));
+    // When user submits a form, Formik will automatically set the isSubmitting to true, indicating that form submission is in progress.
+    // During this time, Formik will also disable the submit button to prevent the user from submitting the form multiple times.
     actions.setSubmitting(false);
   };
 
@@ -56,7 +58,7 @@ const Signup = () => {
   };
 
   return (
-    <div>
+    <>
       <div className="border">
         <Box
           p={8}
@@ -169,7 +171,7 @@ const Signup = () => {
           </span>
         </p>
       </div>
-    </div>
+    </>
   );
 };
 

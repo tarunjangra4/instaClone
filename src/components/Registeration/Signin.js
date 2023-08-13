@@ -32,10 +32,10 @@ const Signin = () => {
   const token = localStorage.getItem("token");
 
   useEffect(() => {
-    if (user?.reqUser?.username) {
-      navigate(`/${user.reqUser.username}`);
+    if (user?.currUser?.username) {
+      navigate(`/${user.currUser.username}`);
     }
-  }, [token, user.reqUser]);
+  }, [token, user.currUser]);
 
   useEffect(() => {
     if (token) {
