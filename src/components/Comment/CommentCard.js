@@ -3,25 +3,31 @@ import { AiFillHeart, AiOutlineHeart } from "react-icons/ai";
 import { isCommentLikedByUser, timeDifference } from "../../Config/Logic";
 import { useDispatch, useSelector } from "react-redux";
 import {
+  deleteCommentAction,
   likeCommentAction,
   unlikeCommentAction,
 } from "../../redux/Comment/Action";
+import { BsThreeDots } from "react-icons/bs";
+import { deleteSingleCommentApi } from "../../Config/api";
 
-const CommentCard = ({ comment }) => {
+const CommentCard = ({ comment, postId }) => {
   const [isCommentLiked, setIsCommentLiked] = useState(false);
+  const [showDropdown, setShowDropDown] = useState(false);
   const dispatch = useDispatch();
   const token = localStorage.getItem("token");
   const { user } = useSelector((store) => store);
 
   useEffect(() => {
-    console.log(comment);
-    // console.log(user?.reqUser);
-    setIsCommentLiked(isCommentLikedByUser(comment, user?.reqUser?.id));
-  }, [user?.reqUser]);
+    // setIsCommentLiked(isCommentLikedByUser(comment, user?.currUser?.id));
+    setIsCommentLiked(
+      comment?.likedBy?.some((likedBy) => user?.currUser?.id === likedBy?.id)
+    );
+  }, [user?.currUser]);
 
   const data = {
     token,
-    commentId: comment?.id,
+    commentId: comment?.commentId,
+    postId,
   };
 
   const handleLikeComment = () => {
@@ -32,6 +38,10 @@ const CommentCard = ({ comment }) => {
   const handleUnlikeComment = () => {
     setIsCommentLiked(false);
     dispatch(unlikeCommentAction(data));
+  };
+
+  const handleDeleteComment = () => {
+    dispatch(deleteCommentAction(data));
   };
 
   return (
@@ -53,11 +63,28 @@ const CommentCard = ({ comment }) => {
               <span className="font-semibold">{comment?.user?.username}</span>
               <span className="ml-2">{comment?.content}</span>
             </p>
-            <div className="flex items-center space-x-3 text-xs opacity-60 pt-1">
+            <div className="flex items-end space-x-3 text-xs opacity-60 pt-1">
               <span>{timeDifference(comment?.createdAt)}</span>
-              {comment?.likedByUsers?.length > 0 && (
-                <span>{comment?.likedByUsers?.length} likes</span>
+              {comment?.likedBy?.length > 0 && (
+                <span>{comment?.likedBy?.length} likes</span>
               )}
+              <span
+                className="relative w-10"
+                onMouseOver={() => setShowDropDown(true)}
+                onMouseLeave={() => setShowDropDown(false)}
+              >
+                <BsThreeDots className="cursor-pointer" />
+                <div className="absolute bottom-3" style={{ left: "-10px" }}>
+                  {showDropdown && (
+                    <p
+                      onClick={handleDeleteComment}
+                      className="bg-black text-white py-1 px-4 rounded-md cursor-pointer"
+                    >
+                      Delete
+                    </p>
+                  )}
+                </div>
+              </span>
             </div>
           </div>
         </div>

@@ -1,5 +1,5 @@
+import React, { useEffect, useRef, useState } from "react";
 import { Modal, ModalBody, ModalContent, ModalOverlay } from "@chakra-ui/react";
-import React, { useEffect, useState } from "react";
 import {
   BsBookmark,
   BsBookmarkFill,
@@ -17,7 +17,7 @@ import {
   findPostCommentAction,
 } from "../../redux/Comment/Action";
 import { useParams } from "react-router-dom";
-import { findPostByIdAction } from "../../redux/Post/Action";
+import { findSinglePostByIdAction } from "../../redux/Post/Action";
 import { timeDifference } from "../../Config/Logic";
 
 const CommentModal = (props) => {
@@ -27,17 +27,18 @@ const CommentModal = (props) => {
     isSaved,
     isPostLiked,
     handlePostLike,
+    handlePostUnlike,
     handleSavePost,
     handleUnsavePost,
   } = props;
 
-  const [commentContent, setCommentContent] = useState();
+  const [commentContent, setCommentContent] = useState("");
   const dispatch = useDispatch();
   const token = localStorage.getItem("token");
   const { postId } = useParams();
   const { comment, post, user } = useSelector((store) => store);
 
-  // console.log("comment ", comment);
+  const inputRef = useRef(null);
 
   useEffect(() => {
     const data = {
@@ -46,9 +47,16 @@ const CommentModal = (props) => {
     };
     if (postId) {
       // how to map comment likedbyusers
-      dispatch(findPostByIdAction(data));
+      dispatch(findSinglePostByIdAction(data));
     }
-  }, [comment.createdComment, postId, comment.likeComment]);
+  }, [
+    comment.createdComment,
+    postId,
+    comment.likedComment,
+    comment.unlikedComment,
+    comment.deletedComment,
+    comment.unli,
+  ]);
 
   // useEffect(() => {
   //   const data = {
@@ -88,13 +96,13 @@ const CommentModal = (props) => {
                         alt=""
                         className="w-9 h-9 rounded-full"
                         src={
-                          user?.reqUser?.userImage ||
+                          post?.singlePost?.createdBy?.userImage ||
                           "https://cdn.pixabay.com/photo/2017/11/10/05/48/user-2935527_1280.png"
                         }
                       />
                     </div>
                     <div className="ml-2">
-                      <p>{user?.reqUser?.username}</p>
+                      <p>{post?.singlePost?.createdBy?.username}</p>
                     </div>
                   </div>
                   <BsThreeDots />
@@ -102,7 +110,7 @@ const CommentModal = (props) => {
                 <hr />
                 <div className="comment">
                   {post?.singlePost?.comments?.map((item, ind) => (
-                    <CommentCard key={ind} comment={item} />
+                    <CommentCard key={ind} comment={item} postId={postId} />
                   ))}
                 </div>
                 <div className="absolute bottom-0 w-[90%]">
@@ -111,7 +119,7 @@ const CommentModal = (props) => {
                       {isPostLiked ? (
                         <AiFillHeart
                           className="text-red-600 text-2xl hover:opacity-50 cursor-pointer"
-                          onClick={handlePostLike}
+                          onClick={handlePostUnlike}
                         />
                       ) : (
                         <AiOutlineHeart
@@ -119,7 +127,12 @@ const CommentModal = (props) => {
                           onClick={handlePostLike}
                         />
                       )}
-                      <FaRegComment className="text-xl hover:opacity-50 cursor-pointer" />
+                      <FaRegComment
+                        className="text-xl hover:opacity-50 cursor-pointer"
+                        onClick={() => {
+                          inputRef.current.focus();
+                        }}
+                      />
                       <RiSendPlaneLine className="text-xl hover:opacity-50 cursor-pointer" />
                     </div>
                     <div>
@@ -147,6 +160,7 @@ const CommentModal = (props) => {
                   <div className="flex items-center px-4 py-2 space-x-2">
                     <BsEmojiSmile />
                     <input
+                      ref={inputRef}
                       className="commentInput"
                       type="text"
                       placeholder="Add a comment..."
