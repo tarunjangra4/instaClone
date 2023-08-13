@@ -5,12 +5,12 @@ import {
   ModalContent,
   ModalOverlay,
 } from "@chakra-ui/react";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { FaPhotoVideo } from "react-icons/fa";
 import { GrEmoji } from "react-icons/gr";
 import "./CreatePostModal.css";
 import { GoLocation } from "react-icons/go";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { createPostAction } from "../../redux/Post/Action";
 import { uploadToCloudinary } from "../../Config/Cloudinary";
 
@@ -18,10 +18,15 @@ const CreatePostModal = ({ onClose, isOpen }) => {
   const [isDragOver, setIsDragOver] = useState(false);
   const [file, setFile] = useState();
   const [caption, setCaption] = useState("");
-  const dispatch = useDispatch();
   const [imageUrl, setImageUrl] = useState("");
   const [location, setLocation] = useState("");
   const token = localStorage.getItem("token");
+  const dispatch = useDispatch();
+  const { post } = useSelector((store) => store);
+
+  useEffect(() => {
+    setFile(null);
+  }, [post]);
 
   const handleDragOver = (e) => {
     e.preventDefault();
