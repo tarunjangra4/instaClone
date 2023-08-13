@@ -7,13 +7,15 @@ const initialValue = {
   searchUser: null,
   updatedUser: null,
   suggestedUsers: [],
+  followersList: [],
+  followingUsersList: [],
 };
 
 export const UserReducer = (store = initialValue, { type, payload }) => {
   if (type === "REQ_USER") {
     return { ...store, currUser: payload };
   } else if (type === "GET_USER_BY_USERNAME") {
-    return { ...store, findUserByUsername: payload };
+    return { ...store, findByUsername: payload };
   } else if (type === "GET_USERS_BY_USER_IDS") {
     return { ...store, findUsersByUserIds: payload };
   } else if (type === "FOLLOW_USER") {
@@ -26,6 +28,12 @@ export const UserReducer = (store = initialValue, { type, payload }) => {
     return { ...store, updatedUser: payload };
   } else if (type === "SUGGESTED_USER") {
     return { ...store, suggestedUsers: payload };
+  } else if (type === "FOLLOWERS_LIST") {
+    return { ...store, followersList: payload };
+  } else if (type === "FOLLOWING_USERS_LIST") {
+    return { ...store, followingUsersList: payload };
+  } else if (type === "REMOVE_FOLLOWER") {
+    return { ...store, followUser: payload };
   }
 
   return store;

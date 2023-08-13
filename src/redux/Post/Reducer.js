@@ -1,5 +1,6 @@
 const initialValue = {
   createdPost: null,
+  currUserPosts: [],
   usersPosts: [],
   deletedPost: null,
   likedPost: null,
@@ -7,12 +8,15 @@ const initialValue = {
   savedPost: null,
   unsavedPost: null,
   singlePost: null,
+  savedPosts: [],
 };
 
 export const PostReducer = (store = initialValue, { type, payload }) => {
   if (type === "CREATE_NEW_POST") {
     return { ...store, createdPost: payload };
-  } else if (type === "GET_USER_POST") {
+  } else if (type === "GET_CURR_USER_POSTS") {
+    return { ...store, currUserPosts: payload };
+  } else if (type === "GET_USERS_POSTS") {
     return { ...store, usersPosts: payload };
   } else if (type === "DELETE_POST") {
     return { ...store, deletedPost: payload };
@@ -26,6 +30,8 @@ export const PostReducer = (store = initialValue, { type, payload }) => {
     return { ...store, unsavedPost: payload };
   } else if (type === "GET_SINGLE_POST") {
     return { ...store, singlePost: payload };
+  } else if (type === "GET_SAVED_POSTS") {
+    return { ...store, savedPosts: payload };
   }
 
   return { ...store };

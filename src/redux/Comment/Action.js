@@ -5,23 +5,36 @@ import {
   LIKE_COMMENT,
   UNLIKE_COMMENT,
 } from "./ActionType";
-import axios, { isCancel, AxiosError } from "axios";
+import axios from "axios";
 
 const BASE_API = "http://localhost:5455/api";
 
 export const createCommentAction = (data) => async (dispatch) => {
   try {
-    const res = await fetch(`${BASE_API}/comments/create/${data.postId}`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: "Bearer " + data.token,
-      },
-      body: JSON.stringify(data.data),
-    });
+    // const res = await fetch(`${BASE_API}/comments/create/${data.postId}`, {
+    //   method: "POST",
+    //   headers: {
+    //     "Content-Type": "application/json",
+    //     Authorization: "Bearer " + data.token,
+    //   },
+    //   body: JSON.stringify(data.data),
+    // });
 
-    const comment = await res.json();
-    dispatch({ type: CREATE_COMMENT, payload: comment });
+    // const comment = await res.json();
+    const res = await axios
+      .post(
+        `${BASE_API}/comments/create/${data.postId}`,
+        JSON.stringify(data.data),
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: "Bearer " + data.token,
+          },
+        }
+      )
+      .then((response) => response.data);
+
+    dispatch({ type: CREATE_COMMENT, payload: res });
   } catch (error) {
     console.log(error);
   }
@@ -29,16 +42,27 @@ export const createCommentAction = (data) => async (dispatch) => {
 
 export const findPostCommentAction = (data) => async (dispatch) => {
   try {
-    const res = await fetch(`${BASE_API}/comments/${data.postId}`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: "Bearer " + data.token,
-      },
-    });
+    // const res = await fetch(`${BASE_API}/comments/${data.postId}`, {
+    //   method: "GET",
+    //   headers: {
+    //     "Content-Type": "application/json",
+    //     Authorization: "Bearer " + data.token,
+    //   },
+    // });
 
-    const comment = await res.json();
-    dispatch({ type: GET_POST_COMMENT, payload: comment });
+    // const comment = await res.json();
+    const res = await axios
+      .get(
+        `${BASE_API}/comments/${data.postId}`,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: "Bearer " + data.token,
+          },
+        }
+      )
+      .then((response) => response.data);
+    dispatch({ type: GET_POST_COMMENT, payload: res });
   } catch (error) {
     console.log(error);
   }
@@ -56,7 +80,7 @@ export const likeCommentAction = (data) => async (dispatch) => {
           },
         }
       )
-      .then((response) => response);
+      .then((response) => response.data);
     dispatch({ type: LIKE_COMMENT, payload: res });
   } catch (error) {
     console.log(error);
