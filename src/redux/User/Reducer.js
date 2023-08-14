@@ -9,6 +9,8 @@ const initialValue = {
   suggestedUsers: [],
   followersList: [],
   followingUsersList: [],
+  followersListByUsername: [],
+  followingUsersListByUsername: [],
 };
 
 export const UserReducer = (store = initialValue, { type, payload }) => {
@@ -34,6 +36,10 @@ export const UserReducer = (store = initialValue, { type, payload }) => {
     return { ...store, followingUsersList: payload };
   } else if (type === "REMOVE_FOLLOWER") {
     return { ...store, followUser: payload };
+  } else if (type === "FOLLOWERS_LIST_BY_USERNAME") {
+    return { ...store, followersListByUsername: payload };
+  } else if (type === "FOLLOWING_USERS_LIST_BY_USERNAME") {
+    return { ...store, followingUsersListByUsername: payload };
   }
 
   return store;

@@ -2,6 +2,7 @@ import {
   CREATE_NEW_POST,
   DELETE_POST,
   GET_CURR_USER_POSTS,
+  GET_POSTS_BY_USERNAME,
   GET_SAVED_POSTS,
   GET_SINGLE_POST,
   GET_USERS_POSTS,
@@ -200,6 +201,23 @@ export const getSavedPostsAction = (token) => async (dispatch) => {
       .then((response) => response.data);
 
     dispatch({ type: GET_SAVED_POSTS, payload: res });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const getPostsByUsernameAction = (data) => async (dispatch) => {
+  try {
+    const res = await axios
+      .get(`${BASE_API}/posts/${data.username}`, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + data.token,
+        },
+      })
+      .then((response) => response.data);
+
+    dispatch({ type: GET_POSTS_BY_USERNAME, payload: res });
   } catch (error) {
     console.log(error);
   }

@@ -9,6 +9,7 @@ const initialValue = {
   unsavedPost: null,
   singlePost: null,
   savedPosts: [],
+  postsOfSelectedUser: [],
 };
 
 export const PostReducer = (store = initialValue, { type, payload }) => {
@@ -32,6 +33,8 @@ export const PostReducer = (store = initialValue, { type, payload }) => {
     return { ...store, singlePost: payload };
   } else if (type === "GET_SAVED_POSTS") {
     return { ...store, savedPosts: payload };
+  } else if (type === "GET_POSTS_BY_USERNAME") {
+    return { ...store, postsOfSelectedUser: payload };
   }
 
   return { ...store };

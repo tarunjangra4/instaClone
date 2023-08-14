@@ -11,21 +11,14 @@ import {
   FOLLOWERS_LIST,
   FOLLOWING_USERS_LIST,
   REMOVE_FOLLOWER,
+  FOLLOWERS_LIST_BY_USERNAME,
+  FOLLOWING_USERS_LIST_BY_USERNAME,
 } from "./ActionType";
 
 const BASE_API = "http://localhost:5455/api";
 
 export const getUserProfileAction = (jwt) => async (dispatch) => {
   try {
-    // const res = await fetch(`${BASE_API}/users/req`, {
-    //   method: "GET",
-    //   headers: {
-    //     "Content-Type": "application/json",
-    //     Authorization: "Bearer " + jwt,
-    //   },
-    // });
-    // const currUser = await res.json();
-
     const res = await axios
       .get(`${BASE_API}/users/req`, {
         headers: {
@@ -38,31 +31,6 @@ export const getUserProfileAction = (jwt) => async (dispatch) => {
     dispatch({ type: REQ_USER, payload: res });
   } catch (error) {
     console.error(error);
-  }
-};
-
-export const findUserByUsernameAction = (data) => async (dispatch) => {
-  try {
-    // const res = await fetch(`${BASE_API}/users/username/${data.username}`, {
-    //   method: "GET",
-    //   headers: {
-    //     "Content-Type": "application/json",
-    //     Authorization: "Bearer " + data.token,
-    //   },
-    // });
-    // const user = await res.json();
-    const res = await axios
-      .get(`${BASE_API}/users/username/${data.username}`, {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: "Bearer " + data.token,
-        },
-      })
-      .then((response) => response.data);
-
-    dispatch({ type: GET_USER_BY_USERNAME, payload: res });
-  } catch (err) {
-    console.error(err);
   }
 };
 
@@ -215,3 +183,55 @@ export const editUserProfileAction = (data) => async (dispatch) => {
     console.error(error);
   }
 };
+
+export const findUserByUsernameAction = (data) => async (dispatch) => {
+  try {
+    const res = await axios
+      .get(`${BASE_API}/users/username/${data.username}`, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + data.token,
+        },
+      })
+      .then((response) => response.data);
+
+    dispatch({ type: GET_USER_BY_USERNAME, payload: res });
+  } catch (err) {
+    console.error(err);
+  }
+};
+
+export const getFollowersListByUsernameAction = (data) => async (dispatch) => {
+  try {
+    const res = await axios
+      .get(`${BASE_API}/users/followers/${data.username}`, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + data.token,
+        },
+      })
+      .then((response) => response.data);
+
+    dispatch({ type: FOLLOWERS_LIST_BY_USERNAME, payload: res });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const getFolloweringUsersListByUsernameAction =
+  (data) => async (dispatch) => {
+    try {
+      const res = await axios
+        .get(`${BASE_API}/users/following/${data.username}`, {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: "Bearer " + data.token,
+          },
+        })
+        .then((response) => response.data);
+
+      dispatch({ type: FOLLOWING_USERS_LIST_BY_USERNAME, payload: res });
+    } catch (error) {
+      console.log(error);
+    }
+  };
