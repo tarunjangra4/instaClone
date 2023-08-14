@@ -17,7 +17,7 @@ export const findIsCommentLikedByUser = (comment, userId) => {
 };
 
 export const findIsPostSaved = (user, postId) => {
-  for (let item of user.savedPost) {
+  for (let item of user?.savedPost) {
     if (item.id === postId) {
       return true;
     }
@@ -25,10 +25,10 @@ export const findIsPostSaved = (user, postId) => {
   return false;
 };
 
-export const findIsFollowing = (reqUser, user2) => {
-  if (reqUser && user2) {
+export const findIsFollowing = (currUser, user2) => {
+  if (currUser && user2) {
     for (let user of user2.follower) {
-      if (reqUser.id === user.id) {
+      if (currUser.id === user.id) {
         return true;
       }
     }
@@ -37,8 +37,8 @@ export const findIsFollowing = (reqUser, user2) => {
 };
 
 export const isCommentLikedByUser = (comment, userId) => {
-  for (let user of comment.likedByUsers) {
-    if (user.id === userId) {
+  for (let user of comment?.likeBy || []) {
+    if (user?.id === userId) {
       return true;
     }
   }

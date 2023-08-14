@@ -1,15 +1,24 @@
 import React, { useEffect } from "react";
 import SuggestionCrad from "./SuggestionCrad";
 import { useDispatch, useSelector } from "react-redux";
-import { suggestedUsers } from "../../redux/User/Action";
+import { followUserAction, suggestedUsers } from "../../redux/User/Action";
 
 const HomeRight = () => {
   const { user } = useSelector((store) => store);
   const token = localStorage.getItem("token");
   const dispatch = useDispatch();
+
   useEffect(() => {
     dispatch(suggestedUsers({ token }));
   }, [user.unfollowUser, user.followUser]);
+
+  const handleFollow = (userId) => {
+    const data = {
+      token,
+      userId,
+    };
+    dispatch(followUserAction(data));
+  };
 
   return (
     <div className="">
@@ -34,7 +43,11 @@ const HomeRight = () => {
         </div>
         <div className="w-full space-y-5 mt-10">
           {user?.suggestedUsers.map((item, index) => (
-            <SuggestionCrad key={index} suggestedUser={item} />
+            <SuggestionCrad
+              key={index}
+              suggestedUser={item}
+              handleFollow={handleFollow}
+            />
           ))}
         </div>
       </div>

@@ -9,11 +9,11 @@ import { getUserProfileAction } from "../../redux/User/Action";
 
 const Home = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const [userIds, setUserIds] = useState([]);
   // const [followingUsersIds, setFollowingUsersIds] = useState([]);
   const { user, post, comment } = useSelector((store) => store);
   const dispatch = useDispatch();
   const token = localStorage.getItem("token");
+  localStorage.setItem("username", null);
 
   useEffect(() => {
     if (token) {
@@ -23,23 +23,18 @@ const Home = () => {
 
   useEffect(() => {
     // const newIds = user.currUser?.following?.map((user) => user.id) || [];
-    // setUserIds([user.currUser?.id, ...newIds]);
-    setUserIds([user.currUser?.id]);
   }, [user.currUser]); // when current user change then userIds will change
 
   useEffect(() => {
-    console.log("api call");
-    const data = {
-      token,
-      userIds: userIds?.join(","),
-    };
-    data?.userIds?.length && dispatch(findAllUsersPostAction(data));
+    console.log("useEffect");
+    dispatch(findAllUsersPostAction(token));
   }, [
-    userIds,
     post.createdPost,
     post.deletedPost,
     comment.createdComment,
     comment.deletedComment,
+    post?.unlikedPost,
+    post?.likedPost,
   ]);
 
   return (
@@ -54,7 +49,7 @@ const Home = () => {
           <div className="space-y-10 w-full mt-10">
             {post.usersPosts.length > 0 &&
               post.usersPosts.map((item, index) => (
-                <PostCard key={index} post={item} />
+                <PostCard key={index} postId={item?.postId} post={item} />
               ))}
           </div>
         </div>
