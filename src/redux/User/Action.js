@@ -34,8 +34,8 @@ export const getUserProfileAction = (jwt) => async (dispatch) => {
   }
 };
 
-export const findUserByUserIds = (data) => async (dispatch) => {
-  const res = await fetch(`${BASE_API}/users/username/${data.userIds}`, {
+export const getUsersByUserIds = (data) => async (dispatch) => {
+  const res = await fetch(`${BASE_API}/users/multiple-users/${data.userIds}`, {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
@@ -151,16 +151,24 @@ export const removeFollower = (data) => async (dispatch) => {
 
 export const searchUserAction = (data) => async (dispatch) => {
   try {
-    const res = await fetch(`${BASE_API}/users/search/?q=${data.userId}`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: "Bearer " + data.token,
-      },
-    });
+    // const res = await fetch(`${BASE_API}/users/search/?q=${data.query}`, {
+    //   method: "GET",
+    //   headers: {
+    //     "Content-Type": "application/json",
+    //     Authorization: "Bearer " + data.token,
+    //   },
+    // });
+    // const user = await res.json();
+    const res = await axios
+      .get(`${BASE_API}/users/search/${data.query}`, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + data.token,
+        },
+      })
+      .then((response) => response.data);
 
-    const user = await res.json();
-    dispatch({ type: SEARCH_USER, payload: user });
+    dispatch({ type: SEARCH_USER, payload: res });
   } catch (error) {
     console.error(error);
   }
@@ -184,7 +192,7 @@ export const editUserProfileAction = (data) => async (dispatch) => {
   }
 };
 
-export const findUserByUsernameAction = (data) => async (dispatch) => {
+export const getUserByUsernameAction = (data) => async (dispatch) => {
   try {
     const res = await axios
       .get(`${BASE_API}/users/username/${data.username}`, {
@@ -218,7 +226,7 @@ export const getFollowersListByUsernameAction = (data) => async (dispatch) => {
   }
 };
 
-export const getFolloweringUsersListByUsernameAction =
+export const getFollowingUsersListByUsernameAction =
   (data) => async (dispatch) => {
     try {
       const res = await axios

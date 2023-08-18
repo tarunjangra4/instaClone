@@ -1,7 +1,7 @@
 const initialValue = {
   currUser: null,
   findByUsername: null,
-  findUsersByUserIds: [],
+  getUsersByUserIds: [],
   followUser: null,
   unfollowUser: null,
   searchUser: null,
@@ -19,7 +19,7 @@ export const UserReducer = (store = initialValue, { type, payload }) => {
   } else if (type === "GET_USER_BY_USERNAME") {
     return { ...store, findByUsername: payload };
   } else if (type === "GET_USERS_BY_USER_IDS") {
-    return { ...store, findUsersByUserIds: payload };
+    return { ...store, getUsersByUserIds: payload };
   } else if (type === "FOLLOW_USER") {
     return { ...store, followUser: payload };
   } else if (type === "UNFOLLOW_USER") {

@@ -33,7 +33,9 @@ const Signin = () => {
 
   useEffect(() => {
     if (user?.currUser?.username) {
-      navigate(`/${user.currUser.username}`);
+      // navigate(`/${user.currUser.username}`);
+      navigate(`/`);
+      localStorage.setItem("loggedInUserId", user?.currUser?.id);
     }
   }, [token, user.currUser]);
 

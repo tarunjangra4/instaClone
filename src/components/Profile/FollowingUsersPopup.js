@@ -14,12 +14,14 @@ import {
   getUserProfileAction,
   unfollowUserAction,
 } from "../../redux/User/Action";
+import { useNavigate } from "react-router-dom";
 
 export const FollowingUsersPopup = (props) => {
   const { onClose, isOpen } = props;
   const dispatch = useDispatch();
   const { user } = useSelector((store) => store);
   const token = localStorage.getItem("token");
+  const navigate = useNavigate();
 
   const unfollowHandler = (userId) => {
     const data = {
@@ -33,11 +35,16 @@ export const FollowingUsersPopup = (props) => {
     dispatch(getFollowingUsersListAction(token));
   }, [user?.unfollowUser]);
 
+  const closeModal = () => {
+    onClose();
+    navigate(-1);
+  };
+
   return (
     <div>
       <Modal
         size={"sm"}
-        onClose={onClose}
+        onClose={closeModal}
         isOpen={isOpen}
         isCentered
         blockScrollOnMount={false}
@@ -48,7 +55,7 @@ export const FollowingUsersPopup = (props) => {
           <ModalCloseButton />
           <ModalBody className="relative">
             <hr className="absolute top-[-5px] left-[50%] w-[90%] translate-x-[-50%]" />
-            {user?.followingUsersList?.map((item, index) => (
+            {user?.followingUsersListByUsername?.map((item, index) => (
               <div key={index} className="flex justify-between">
                 <div>
                   <p className="font-medium">{item?.username}</p>

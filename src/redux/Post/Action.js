@@ -11,6 +11,7 @@ import {
   SAVE_POST,
   UNLIKE_POST,
   UNSAVE_POST,
+  GET_SAVED_POSTS_BY_USERNAME,
 } from "./ActionType";
 import axios from "axios";
 
@@ -218,6 +219,23 @@ export const getPostsByUsernameAction = (data) => async (dispatch) => {
       .then((response) => response.data);
 
     dispatch({ type: GET_POSTS_BY_USERNAME, payload: res });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const getSavedPostsByUsernameAction = (data) => async (dispatch) => {
+  try {
+    const res = await axios
+      .get(`${BASE_API}/posts/saved_posts/${data.username}`, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + data.token,
+        },
+      })
+      .then((response) => response.data);
+
+    dispatch({ type: GET_SAVED_POSTS_BY_USERNAME, payload: res });
   } catch (error) {
     console.log(error);
   }
