@@ -1,12 +1,16 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 
-const StoryCircle = () => {
+const StoryCircle = ({ user }) => {
   const navigate = useNavigate();
 
   const handleNavigate = () => {
-    navigate("/story");
+    navigate(`/story/${user?.id}`);
+    // navigate(`/story`);
   };
+
+  // console.log("user ", user);
+
   return (
     <div
       onClick={handleNavigate}
@@ -15,9 +19,12 @@ const StoryCircle = () => {
       <img
         alt=""
         className="w-16 h-16 rounded-full"
-        src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRcbdoQ8RUTxZAJSH24mgcRQm8cj3gBPM_D3TNAVpLZ&s"
+        src={
+          user?.image ||
+          `https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRcbdoQ8RUTxZAJSH24mgcRQm8cj3gBPM_D3TNAVpLZ&s`
+        }
       />
-      <p>usernametj</p>
+      <p>{user?.username}</p>
     </div>
   );
 };

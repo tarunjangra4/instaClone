@@ -67,3 +67,33 @@ export const timeDifference = (timeStamp) => {
     return seconds + "second" + (seconds === 1 ? "" : "s") + " ago";
   }
 };
+
+const getTimeInHours = (timeStamp) => {
+  const date = new Date(timeStamp);
+  const hours = date.getHours();
+  return hours;
+};
+
+// export const hasStory = (users) => {
+//   const temp = users?.reduce((acc, item) => {
+//     if (item?.stories?.length > 0) {
+//       const time = getTimeInHours(
+//         item.stories[item?.stories?.length - 1].timeStamp
+//       );
+//       if (time < 24) {
+//         acc.push(item);
+//       }
+//     }
+//     return acc;
+//   }, []);
+//   return temp;
+// };
+
+export const hasStory = (users = [], stories) => {
+  console.log("1 ", users, stories);
+  let arr = [];
+  for (let story of stories) {
+    arr = [...users?.filter((user) => user.id === story.userId)];
+  }
+  return arr;
+};

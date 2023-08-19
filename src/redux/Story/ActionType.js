@@ -1,5 +1,5 @@
+export const CREATE_STORY = "CREATE_STORY";
 export const FIND_STORY_BY_ID = "FIND_STORY_BY_ID";
-// export const
-// export const
-// export const
-// export const
+export const FETCH_FOLLOWING_USER_STORY = "FETCH_FOLLOWING_USER_STORY";
+export const FETCH_USER_STORY = "FETCH_USER_STORY";
+export const FETCH_USERS_HAS_STORY = "FETCH_USERS_HAS_STORY";
