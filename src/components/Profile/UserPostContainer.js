@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useId, useState } from "react";
 import { AiOutlineTable, AiOutlineUser } from "react-icons/ai";
 import { RiVideoAddLine } from "react-icons/ri";
 import { BiBookmark } from "react-icons/bi";
@@ -6,16 +6,19 @@ import UserPostCard from "./UserPostCard";
 import { useDispatch, useSelector } from "react-redux";
 import { getSavedPostsAction } from "../../redux/Post/Action";
 import UserSavedPostContainer from "./UserSavedPostContainer";
+import { useParams } from "react-router-dom";
 
 const UserPostContainer = ({ token, username }) => {
   const [activeTab, setActiveTab] = useState("Post");
-
   const { user, post } = useSelector((store) => store);
   const dispatch = useDispatch();
 
   useEffect(() => {
     dispatch(getSavedPostsAction(token));
   }, [user?.currUser]);
+
+  // console.log(activeTab, post?.savedPosts);
+  console.log("post ", post);
 
   const tabs = [
     {
@@ -54,22 +57,28 @@ const UserPostContainer = ({ token, username }) => {
       </div>
       {activeTab === "Post" ? (
         <div className="flex flex-wrap gap-7">
-          {post?.currUserPosts?.map((item, index) => (
-            <UserPostCard
-              key={index}
-              post={item}
-              token={token}
-              userId={user?.currUser?.id}
-            />
-          ))}
+          {post?.postsOfSelectedUser?.length > 0 ? (
+            post?.postsOfSelectedUser?.map((item, index) => (
+              <UserPostCard
+                key={index}
+                post={item}
+                token={token}
+                currUserId={user?.currUser?.id}
+              />
+            ))
+          ) : (
+            <div className="w-full mt-10">
+              User Does not have any posts yet.
+            </div>
+          )}
         </div>
       ) : activeTab === "Saved" ? (
         <div className="flex flex-wrap gap-7">
-          {post?.savedPosts?.map((item, index) => (
+          {post?.savedPostsOfSelectedUser?.map((item, index) => (
             <UserSavedPostContainer
               key={index}
               post={item}
-              userId={user?.currUser?.id}
+              currUserId={user?.currUser?.id}
             />
           ))}
         </div>

@@ -11,18 +11,19 @@ import {
   unsavePostAction,
 } from "../../redux/Post/Action";
 import { useDispatch } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
-const UserPostCard = ({ post, token, userId }) => {
+const UserPostCard = ({ post, token, currUserId }) => {
   const [isSaved, setIsSaved] = useState(false);
   const [isPostLiked, setIsPostLiked] = useState(false);
   const { isOpen, onOpen, onClose } = useDisclosure();
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const data = { token, postId: post?.postId };
+  const { userId } = useParams();
 
   useEffect(() => {
-    setIsPostLiked(post?.likeBy?.some((likedBy) => userId === likedBy?.id));
+    setIsPostLiked(post?.likeBy?.some((likedBy) => currUserId === likedBy?.id));
   }, [post.likeBy]);
 
   const handlePostLike = () => {
@@ -52,8 +53,12 @@ const UserPostCard = ({ post, token, userId }) => {
 
   return (
     <div>
-      <div className="post w-60 h-full flex items-center" onClick={handleOpenCommentModal}>
-        <img 
+      <div
+        className="post w-60 h-full flex items-center"
+        onClick={handleOpenCommentModal}
+      >
+        <img
+          className="object-cover w-full h-full"
           src={
             post?.image ||
             "https://t4.ftcdn.net/jpg/05/46/67/67/240_F_546676739_onWkz33cgqPVB1AmHkPr6KemWVSRxjHZ.jpg"

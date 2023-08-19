@@ -16,17 +16,19 @@ import { menu } from "./SidebarConfig";
 import CreatePostModal from "../Posts/CreatePostModal";
 import { useDisclosure } from "@chakra-ui/react";
 import SerachComponent from "../SerachComponent/SearchComponent";
+import { useSelector } from "react-redux";
 
 const Sidebar = () => {
   const [activeTab, setActiveTab] = useState(null);
   const [isSearchVisible, setIsSearchVisible] = useState(false);
   const navigate = useNavigate();
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const { user } = useSelector((store) => store);
 
   const handleTabClick = (tab) => {
     setActiveTab(tab);
     if (tab === "Profile") {
-      navigate("/profile");
+      navigate(`/${user?.currUser?.username}`);
     } else if (tab === "Home") {
       navigate("/");
     } else if (tab === "Explore") {
@@ -78,7 +80,12 @@ const Sidebar = () => {
       </div>
 
       <CreatePostModal onClose={onClose} isOpen={isOpen} />
-      {isSearchVisible && <SerachComponent />}
+      {isSearchVisible && (
+        <SerachComponent
+          setIsSearchVisible={setIsSearchVisible}
+          setActiveTab={setActiveTab}
+        />
+      )}
     </div>
   );
 };

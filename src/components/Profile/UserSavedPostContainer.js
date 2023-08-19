@@ -12,7 +12,7 @@ import {
 } from "../../redux/Post/Action";
 import CommentModal from "../Comment/CommentModal";
 
-const UserSavedPostContainer = ({ post, userId }) => {
+const UserSavedPostContainer = ({ post, currUserId }) => {
   const [isSaved, setIsSaved] = useState(false);
   const [isPostLiked, setIsPostLiked] = useState(false);
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -22,7 +22,7 @@ const UserSavedPostContainer = ({ post, userId }) => {
   const data = { token, postId: post?.postId };
 
   useEffect(() => {
-    setIsPostLiked(post?.likeBy?.some((likedBy) => userId === likedBy?.id));
+    setIsPostLiked(post?.likeBy?.some((likedBy) => currUserId === likedBy?.id));
   }, [post.likeBy]);
 
   const handlePostLike = () => {
@@ -54,6 +54,7 @@ const UserSavedPostContainer = ({ post, userId }) => {
     <div>
       <div className="post w-60" onClick={handleOpenCommentModal}>
         <img
+          className="object-cover w-full h-full"
           src={
             post?.image ||
             "https://t4.ftcdn.net/jpg/05/46/67/67/240_F_546676739_onWkz33cgqPVB1AmHkPr6KemWVSRxjHZ.jpg"
