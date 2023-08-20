@@ -8,7 +8,6 @@ import {
   unlikeCommentAction,
 } from "../../redux/Comment/Action";
 import { BsThreeDots } from "react-icons/bs";
-import { deleteSingleCommentApi } from "../../Config/api";
 
 const CommentCard = ({ comment, postId }) => {
   const [isCommentLiked, setIsCommentLiked] = useState(false);
